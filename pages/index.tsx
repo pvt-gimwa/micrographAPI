@@ -28,7 +28,7 @@ export default function Home({ memberTable }:any) {
       <main className={styles.main}>
         <div className={styles.description}>
           <p>
-            Testing Micrograph&nbsp;
+            Testing MicrographAPI&nbsp;
             <code className={styles.code}></code>
             <Schedule memberTable={memberTable} />
           </p>
