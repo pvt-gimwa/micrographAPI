@@ -18,6 +18,10 @@
     "next": "13.1.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "typescript": "4.9.5"
+    "typescript": "4.9.5",
+    "@microsoft/microsoft-graph-client": "^3.0.4",
+    "@types/microsoft-graph": "^2.24.0",
+    "next-auth": "^4.19.0"
   }
+  
 }
