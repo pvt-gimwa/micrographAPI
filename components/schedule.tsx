@@ -102,11 +102,9 @@ const Schedule = ( { memberTable }: any ) => {
                     <code>{JSON.stringify(session, null, 2)}</code>
                 </span>
             )}
-            {schedule ? 
-            <span className={styles.dataSpan}><code className={styles.codeBox}>{schedule}</code></span> 
-            : 
-            <span className={styles.dataSpan}><code>No</code></span> 
-            }
+            {schedule && (
+                <span className={styles.dataSpan}><code className={styles.codeBox}>{schedule}</code></span> 
+            )}
         </span>
     )
 }
