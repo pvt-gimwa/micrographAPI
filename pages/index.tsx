@@ -2,10 +2,21 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
+import Schedule from '@/components/schedule'
+import { getSchedule } from '@/lib/getSchedule'
+// import { NextApiRequest, NextApiResponse } from "next"
+import type { NextApiRequest, NextApiResponse } from "next"
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home() {
+export async function getServerSideProps(req: NextApiRequest, res: NextApiResponse<any>) {
+    const memberTable = await getSchedule( req, res )
+    return { props: { memberTable } }
+  }
+
+
+export default function Home({ memberTable }:any) {
+
   return (
     <>
       <Head>
@@ -17,8 +28,9 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.description}>
           <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>pages/index.tsx</code>
+            Testing Micrograph&nbsp;
+            <code className={styles.code}></code>
+            <Schedule memberTable={memberTable} />
           </p>
           <div>
             <a

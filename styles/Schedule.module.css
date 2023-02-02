@@ -1,0 +1,10 @@
+.userSpan{
+  display: inline-block!important;
+}
+.dataSpan{
+  display: block!important;
+  margin-top: 1em;
+}
+.dataSpan code{
+  white-space: pre;
+}

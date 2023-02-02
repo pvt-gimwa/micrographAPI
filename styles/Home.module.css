@@ -219,7 +219,7 @@
     width: 100%;
   }
 
-  .description p {
+  .description span {
     align-items: center;
     inset: 0 0 auto;
     padding: 2rem 1rem 1.4rem;
