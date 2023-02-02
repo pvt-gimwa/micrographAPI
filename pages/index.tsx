@@ -4,18 +4,26 @@ import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
 import Schedule from '@/components/schedule'
 import { getSchedule } from '@/lib/getSchedule'
-// import { NextApiRequest, NextApiResponse } from "next"
 import type { NextApiRequest, NextApiResponse } from "next"
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "./api/auth/[...nextauth]"
+import { useSession } from "next-auth/react"
 
 const inter = Inter({ subsets: ['latin'] })
 
-export async function getServerSideProps(req: NextApiRequest, res: NextApiResponse<any>) {
-    const memberTable = await getSchedule( req, res )
-    return { props: { memberTable } }
+export async function getServerSideProps(context:any) {
+  return {
+    props: {
+      session: await getServerSession(
+        context.req,
+        context.res,
+        authOptions
+      ),
+    },
   }
+}
 
-
-export default function Home({ memberTable }:any) {
+export default function Home() {
 
   return (
     <>
@@ -30,7 +38,7 @@ export default function Home({ memberTable }:any) {
           <p>
             Testing MicrographAPI&nbsp;
             <code className={styles.code}></code>
-            <Schedule memberTable={memberTable} />
+            <Schedule />
           </p>
           <div>
             <a

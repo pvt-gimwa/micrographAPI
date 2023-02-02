@@ -5,6 +5,8 @@ import styles from '@/styles/Schedule.module.css'
 import AzureADProvider from 'next-auth/providers/azure-ad';
 import { getSchedule } from '@/lib/getSchedule';
 import type { NextApiRequest, NextApiResponse } from "next"
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/pages/api/auth/[...nextauth]"
 
 // const getExcelData = async () => {
 //     const data = await fetch('/api/getSchedule');
@@ -31,15 +33,33 @@ const Schedule = ( { memberTable }: any ) => {
 
     const { data: session, status } = useSession();
     const isLoading = status === 'loading';
+    // const aaa = await('/api/getSchedule')
+    const [schedule, setSchedule] = useState("");
 
-    const data = memberTable ? memberTable : "no data"
+    useEffect(() => {
+        fetch("/api/getSchedule")
+        .then((res) => res.json())
+        .then(
+          (result) => {
+            if(result.text){
+                const data = result.text.toString()
+                console.log(data)
+                setSchedule(data)    
+            }else{
+                setSchedule("no data")    
+            }
+          },
+          (error) => {
+            setSchedule(error)    
+            }
+        );
+  
+    }, []);
 
-    data ? console.log("has data", data) : console.log("no data")
-    
     if (isLoading) {
         return <span>Loading...</span>
     }
-
+    
     return(
         <span>
             <span
@@ -82,12 +102,11 @@ const Schedule = ( { memberTable }: any ) => {
                     <code>{JSON.stringify(session, null, 2)}</code>
                 </span>
             )}
-            {data ? 
-            <span className={styles.dataSpan}><code>data</code></span> 
+            {schedule ? 
+            <span className={styles.dataSpan}><code className={styles.codeBox}>{schedule}</code></span> 
             : 
             <span className={styles.dataSpan}><code>No</code></span> 
             }
-            
         </span>
     )
 }

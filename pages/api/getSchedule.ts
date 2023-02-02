@@ -18,7 +18,7 @@ export default async function handler(
   });
 
   const accessToken = token?.accessToken;
-  console.log("accessToken", accessToken)
+  // console.log("accessToken", accessToken)
   // console.log("api", req)
 
   if (accessToken) {
