@@ -50,7 +50,7 @@ const Schedule = ( { memberTable }: any ) => {
             }
           },
           (error) => {
-            setSchedule(error)    
+            setSchedule(error.toString())    
             }
         );
   
