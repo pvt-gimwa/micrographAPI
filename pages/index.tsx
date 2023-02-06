@@ -3,11 +3,13 @@ import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
 import Schedule from '@/components/schedule'
-import { getSchedule } from '@/lib/getSchedule'
-import type { NextApiRequest, NextApiResponse } from "next"
+import type { NextApiRequest, NextApiResponse, NextPage } from "next"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "./api/auth/[...nextauth]"
 import { useSession } from "next-auth/react"
+import { useRouter } from 'next/router'
+import Router, { NextRouter } from 'next/router'
+import JWT from 'next-auth/jwt'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,7 +25,11 @@ export async function getServerSideProps(context:any) {
   }
 }
 
-export default function Home() {
+interface Props {
+  req: NextRouter
+}
+
+const Home: NextPage<Props> = ({ req }) => {
 
   return (
     <>
@@ -38,7 +44,7 @@ export default function Home() {
           <p>
             Testing MicrographAPI&nbsp;
             <code className={styles.code}></code>
-            <Schedule />
+            <Schedule req={req}/>
           </p>
           <div>
             <a
@@ -141,3 +147,5 @@ export default function Home() {
     </>
   )
 }
+
+export default Home

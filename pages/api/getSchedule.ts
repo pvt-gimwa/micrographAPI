@@ -5,7 +5,7 @@
  * author: Glaucia Lemos <Twitter: @glaucia_lemos86>
  */
 
-import { getToken, } from "next-auth/jwt";
+import { getToken } from "next-auth/jwt";
 import { Client } from "@microsoft/microsoft-graph-client";
 import type { NextApiRequest, NextApiResponse } from "next"
 

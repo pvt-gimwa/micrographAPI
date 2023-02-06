@@ -1,49 +1,30 @@
 import { useEffect, useState } from 'react'
-import Link from 'next/link';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import styles from '@/styles/Schedule.module.css'
-import AzureADProvider from 'next-auth/providers/azure-ad';
-import { getSchedule } from '@/lib/getSchedule';
-import type { NextApiRequest, NextApiResponse } from "next"
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/pages/api/auth/[...nextauth]"
+import { JWT } from "next-auth/jwt"
+import { Client } from '@microsoft/microsoft-graph-client';
 
-// const getExcelData = async () => {
-//     const data = await fetch('/api/getSchedule');
-//     const presence = await data.json();
-//     return presence
-// }
+interface Props {
+    req: any;
+}
+const secret = process.env.NEXTAUTH_SECRET
 
-// const excelData = getExcelData().then(res =>{
-//     console.log(res.text)
-    
-//     return res.text
-// })
-// .catch(err =>{
-//     return err
-// })
-
-// export async function getServerSideProps(NextApiRequest: NextApiRequest, NextApiResponse: NextApiResponse<any> ) {
-//     const memberTable = await getSchedule( NextApiRequest, NextApiResponse )
-//     return { props: { memberTable } }
-//   }
-  
-
-const Schedule = ( { memberTable }: any ) => {
+const Schedule:React.FC<Props> = ({ req }) => {
 
     const { data: session, status } = useSession();
     const isLoading = status === 'loading';
-    // const aaa = await('/api/getSchedule')
     const [schedule, setSchedule] = useState("");
-
+    const [data, setData] = useState(null);
+    const accessToken = session?.token.accessToken
+    let schedule_data = null
+    
     useEffect(() => {
         fetch("/api/getSchedule")
         .then((res) => res.json())
         .then(
           (result) => {
             if(result.text){
-                const data = result.text.toString()
-                console.log(data)
+                const data = result.text
                 setSchedule(data)    
             }else{
                 setSchedule("no data")    
@@ -53,8 +34,34 @@ const Schedule = ( { memberTable }: any ) => {
             setSchedule(error.toString())    
             }
         );
-  
+
+        
+        if (accessToken) {
+
+            console.log("has accessToken")
+            // console.log(accessToken)
+
+            const fetchData = async () =>{
+                const client = Client.init({ authProvider: (done) => done(null, accessToken) });
+                try{
+                    const api_data = await client.api("/me/drive/items/01GLA6DPN776CQXYQNGFCYR2UCHCLTSFVW/workbook/worksheets('2月予定表')/range(address='$F$2:$CE$31')").get();
+                    setData(api_data.text)
+                }catch(err){
+                    console.log(err)
+                }
+            } 
+        
+            fetchData()
+
+        } else {
+
+            console.log("no accessToken")
+    
+        }
+    
     }, []);
+
+    console.log(data)
 
     if (isLoading) {
         return <span>Loading...</span>
@@ -102,8 +109,11 @@ const Schedule = ( { memberTable }: any ) => {
                     <code>{JSON.stringify(session, null, 2)}</code>
                 </span>
             )}
-            {schedule && (
-                <span className={styles.dataSpan}><code className={styles.codeBox}>{schedule}</code></span> 
+            {/* {schedule && (
+                <span className={styles.dataSpan}><code className={styles.codeBox}>{JSON.stringify(schedule, null, 2)}</code></span> 
+            )} */}
+            {data && (
+                <span className={styles.dataSpan}><code className={styles.codeBox}>{JSON.stringify(data, null, 2)}</code></span> 
             )}
         </span>
     )

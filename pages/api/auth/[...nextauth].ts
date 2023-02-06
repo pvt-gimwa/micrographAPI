@@ -5,7 +5,7 @@
  * author: Glaucia Lemos <Twitter: @glaucia_lemos86>
  */
 
-import NextAuth, { NextAuthOptions } from "node_modules/next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import AzureADProvider from 'next-auth/providers/azure-ad';
 
 export const authOptions: NextAuthOptions = {
@@ -22,11 +22,19 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
+    async session({ session, token }) {
+      // Send properties to the client, like an access_token and user id from a provider.
+      session.token = token
+      // console.log("session",session)
+      // console.log("token",token)
+      return session
+    },
     async jwt({ token, account }) {
       // Persist the OAuth access_token to the right token after signin
       if (account) {
         token.accessToken = account.access_token;
         token.refreshToken = account.refresh_token;
+        // console.log(token)
       }
 
       return token;
