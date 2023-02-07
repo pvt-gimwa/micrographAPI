@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { signIn, signOut, useSession } from 'next-auth/react';
 import styles from '@/styles/Schedule.module.css'
 import { JWT } from "next-auth/jwt"
-import { Client } from '@microsoft/microsoft-graph-client';
+import { getMSgraphApi } from '@/lib/getSchedule';
 
 interface Props {
     req: any;
@@ -13,55 +13,27 @@ const Schedule:React.FC<Props> = ({ req }) => {
 
     const { data: session, status } = useSession();
     const isLoading = status === 'loading';
-    const [schedule, setSchedule] = useState("");
     const [data, setData] = useState(null);
     const accessToken = session?.token.accessToken
-    let schedule_data = null
     
-    useEffect(() => {
-        fetch("/api/getSchedule")
-        .then((res) => res.json())
-        .then(
-          (result) => {
-            if(result.text){
-                const data = result.text
-                setSchedule(data)    
-            }else{
-                setSchedule("no data")    
-            }
-          },
-          (error) => {
-            setSchedule(error.toString())    
-            }
-        );
-
-        
+    useEffect(() => {        
         if (accessToken) {
-
-            console.log("has accessToken")
-            // console.log(accessToken)
-
             const fetchData = async () =>{
-                const client = Client.init({ authProvider: (done) => done(null, accessToken) });
                 try{
-                    const api_data = await client.api("/me/drive/items/01GLA6DPN776CQXYQNGFCYR2UCHCLTSFVW/workbook/worksheets('2月予定表')/range(address='$F$2:$CE$31')").get();
+                    const api_data = await getMSgraphApi(accessToken)
                     setData(api_data.text)
                 }catch(err){
                     console.log(err)
                 }
             } 
-        
             fetchData()
-
         } else {
-
             console.log("no accessToken")
-    
         }
     
     }, []);
 
-    console.log(data)
+    // console.log(data)
 
     if (isLoading) {
         return <span>Loading...</span>
@@ -103,17 +75,16 @@ const Schedule:React.FC<Props> = ({ req }) => {
                 )}
             </span>
             {session?.user && (
-                <span
-                    className={styles.dataSpan}
-                >
-                    <code>{JSON.stringify(session, null, 2)}</code>
+                <span className={styles.dataSpan}>
+                    <span><b>- Session情報 -</b></span><br /><br />
+                    <code className={styles.codeBox}>{JSON.stringify(session, null, 2)}</code>
                 </span>
             )}
-            {/* {schedule && (
-                <span className={styles.dataSpan}><code className={styles.codeBox}>{JSON.stringify(schedule, null, 2)}</code></span> 
-            )} */}
             {data && (
-                <span className={styles.dataSpan}><code className={styles.codeBox}>{JSON.stringify(data, null, 2)}</code></span> 
+                <span className={styles.dataSpan}>
+                    <span><b>- 取得したData -</b></span><br /><br />
+                    <code className={styles.codeBox}>{JSON.stringify(data, null, 2)}</code>
+                </span> 
             )}
         </span>
     )
