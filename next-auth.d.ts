@@ -8,8 +8,6 @@ declare module "next-auth/jwt" {
     userRole?: "admin",
     accessToken?: string,
     refreshToken?: string,
-    accessTokenExpires?: number,
-    data: any
   }
 }
 
@@ -29,7 +27,6 @@ declare module "next-auth" {
     token: {
       accessToken: string
     } & DefaultSession["token"],
-    error: string,
-    api_data: any
+
   }
 }

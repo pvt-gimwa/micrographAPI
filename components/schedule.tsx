@@ -1,15 +1,39 @@
+import { useEffect, useState } from 'react'
 import { signIn, signOut, useSession } from 'next-auth/react';
 import styles from '@/styles/Schedule.module.css'
+import { JWT } from "next-auth/jwt"
+import { getMSgraphApi } from '@/lib/getSchedule';
 
-const Schedule:React.FC= () => {
+interface Props {
+    req: any;
+}
+const secret = process.env.NEXTAUTH_SECRET
+
+const Schedule:React.FC<Props> = ({ req }) => {
 
     const { data: session, status } = useSession();
-
     const isLoading = status === 'loading';
+    const [data, setData] = useState(null);
+    const accessToken = session?.token.accessToken
+    
+    useEffect(() => {        
+        if (accessToken) {
+            const fetchData = async () =>{
+                try{
+                    const api_data = await getMSgraphApi(accessToken)
+                    setData(api_data.text)
+                }catch(err){
+                    console.log(err)
+                }
+            } 
+            fetchData()
+        } else {
+            console.log("no accessToken")
+        }
+    
+    }, []);
 
-    if (session?.error === "RefreshAccessTokenError") {
-        signIn(); // Force sign in to hopefully resolve error
-    }
+    // console.log(data)
 
     if (isLoading) {
         return <span>Loading...</span>
@@ -50,16 +74,16 @@ const Schedule:React.FC= () => {
                     </>
                 )}
             </span>
-            {session && (
+            {session?.user && (
                 <span className={styles.dataSpan}>
                     <span><b>- Session情報 -</b></span><br /><br />
                     <code className={styles.codeBox}>{JSON.stringify(session, null, 2)}</code>
                 </span>
             )}
-            {session?.api_data && (
+            {data && (
                 <span className={styles.dataSpan}>
                     <span><b>- 取得したData -</b></span><br /><br />
-                    <code className={styles.codeBox}>{JSON.stringify(session.api_data, null, 2)}</code>
+                    <code className={styles.codeBox}>{JSON.stringify(data, null, 2)}</code>
                 </span> 
             )}
         </span>
