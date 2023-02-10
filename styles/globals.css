@@ -105,6 +105,10 @@ button {
   padding: .3em .5em;
 }
 
+#profile-div{
+  max-height: 30vh;
+  overflow: auto;
+}
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

@@ -54,13 +54,17 @@ export const msalConfig = {
  * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
  */
 export const loginRequest = {
-    scopes: ["User.Read"]
+    scopes: ["User.Read Files.Read Files.ReadWrite Files.ReadWrite Files.ReadWrite.All"]
 };
 
 /**
  * Add here the scopes to request when obtaining an access token for MS Graph API. For more information, see:
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/resources-and-scopes.md
  */
-export const graphConfig = {
-    graphMeEndpoint: "https://graph.microsoft.com/v1.0/me"
-};
+export const graphConfig = (month: string) => {
+    return  {
+        // graphMeEndpoint: `https://graph.microsoft.com/v1.0/me/drive/items/01GLA6DPN776CQXYQNGFCYR2UCHCLTSFVW/workbook/worksheets('2月予定表')/range(address='$F$2:$CE$31')`
+        graphMeEndpoint: `https://graph.microsoft.com/v1.0/me/drive/items/01GLA6DPN776CQXYQNGFCYR2UCHCLTSFVW/workbook/worksheets('${month}月予定表')/range(address='$F$2:$CE$31')`
+        // graphMeEndpoint: "https://graph.microsoft.com/v1.0/me"
+    }    
+}

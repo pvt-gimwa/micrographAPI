@@ -9,7 +9,7 @@ import { callMsGraph } from '@/lib/graph';
 
 /**
  * Renders information about the signed-in user or a button to retrieve data about the user
- */
+ */ 
 const ProfileContent = () => {
     const { instance, accounts } = useMsal();
     const [graphData, setGraphData] = useState(null);
@@ -66,7 +66,6 @@ const Schedule = () => {
                 }
             </span>
             <div className={styles.dataSpan}>
-                <span><b>- Session情報 -</b></span><br /><br />
                 <AuthenticatedTemplate>
                     <ProfileContent />
                 </AuthenticatedTemplate>

@@ -28,7 +28,7 @@ export const PageLayout = (props:any) => {
                 SignOutButton:<br /><SignOutButton />
                 </div> */}
             </div>
-            <h5><center>Welcome to the Microsoft Authentication Library For Javascript - React Quickstart</center></h5>
+            <h5>Welcome to the Microsoft Authentication Library For Javascript - React Quickstart</h5>
             <br />
             <br />
             {props.children}
