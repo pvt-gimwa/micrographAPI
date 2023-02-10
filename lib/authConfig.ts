@@ -63,8 +63,8 @@ export const loginRequest = {
  */
 export const graphConfig = (month: string) => {
     return  {
-        // graphMeEndpoint: `https://graph.microsoft.com/v1.0/me/drive/items/01GLA6DPN776CQXYQNGFCYR2UCHCLTSFVW/workbook/worksheets('2月予定表')/range(address='$F$2:$CE$31')`
-        graphMeEndpoint: `https://graph.microsoft.com/v1.0/me/drive/items/01GLA6DPN776CQXYQNGFCYR2UCHCLTSFVW/workbook/worksheets('${month}月予定表')/range(address='$F$2:$CE$31')`
-        // graphMeEndpoint: "https://graph.microsoft.com/v1.0/me"
+        // graphMeEndpoint: `https://graph.microsoft.com/v1.0/me/drive/items/01FZVVFE77EEYA2UNKMVD3HP2C3X4P2EBD/workbook/worksheets('2月予定表')/range(address='$F$2:$CE$31')`
+        // graphMeEndpoint: `https://graph.microsoft.com/v1.0/me/drive/items/01FZVVFE77EEYA2UNKMVD3HP2C3X4P2EBD/workbook/worksheets('${month}月予定表')/range(address='$F$2:$CE$31')`
+        graphMeEndpoint: "https://graph.microsoft.com/v1.0/me"
     }    
 }
