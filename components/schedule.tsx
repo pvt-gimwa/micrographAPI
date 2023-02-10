@@ -3,7 +3,7 @@ import { AuthenticatedTemplate, UnauthenticatedTemplate, useIsAuthenticated, use
 import { SignInButton } from './SignInButton';
 import { SignOutButton } from './SignOutButton';
 import { ProfileData } from '@/components/ProfileData';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { loginRequest } from '@/lib/authConfig';
 import { callMsGraph } from '@/lib/graph';
 
@@ -13,7 +13,7 @@ import { callMsGraph } from '@/lib/graph';
 const ProfileContent = () => {
     const { instance, accounts } = useMsal();
     const [graphData, setGraphData] = useState(null);
-  
+    
     function RequestProfileData() {
         // Silently acquires an access token which is then attached to a request for MS Graph data
         instance.acquireTokenSilent({
@@ -24,13 +24,18 @@ const ProfileContent = () => {
         });
     }
   
+    useEffect(()=>{
+        RequestProfileData()
+    })
+
     return (
         <>
             <p className="card-title">Welcome {accounts[0].name ? accounts[0].name : null}</p>
             {graphData ? 
                 <ProfileData graphData={graphData} />
                 :
-                <button onClick={RequestProfileData}>Request Profile Information</button>
+                <p>Loading...</p>
+                // <button onClick={RequestProfileData}>Request Profile Information</button>
             }
         </>
     );

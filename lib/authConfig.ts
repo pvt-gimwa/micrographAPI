@@ -62,9 +62,14 @@ export const loginRequest = {
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/resources-and-scopes.md
  */
 export const graphConfig = (month: string) => {
+    const drive_id = "b!VMCHEw2j00S36IUERufRDt1vJOX9Y5ZLiYiY4brsaqmFEG7hAoQIS5a0WDh2DRY6"
+    const item_id  = "01FZVVFE77EEYA2UNKMVD3HP2C3X4P2EBD"
+    const area     = "$F$2:$CE$31"
     return  {
         // graphMeEndpoint: `https://graph.microsoft.com/v1.0/me/drive/items/01FZVVFE77EEYA2UNKMVD3HP2C3X4P2EBD/workbook/worksheets('2月予定表')/range(address='$F$2:$CE$31')`
         // graphMeEndpoint: `https://graph.microsoft.com/v1.0/me/drive/items/01FZVVFE77EEYA2UNKMVD3HP2C3X4P2EBD/workbook/worksheets('${month}月予定表')/range(address='$F$2:$CE$31')`
-        graphMeEndpoint: "https://graph.microsoft.com/v1.0/me"
+        graphMeEndpoint: `https://graph.microsoft.com/v1.0/me/drives/${drive_id}/items/${item_id}/workbook/worksheets('${month}月予定表')/range(address='${area}')`
+        // graphMeEndpoint: `https://graph.microsoft.com/v1.0/me/drives/b!VMCHEw2j00S36IUERufRDt1vJOX9Y5ZLiYiY4brsaqmFEG7hAoQIS5a0WDh2DRY6/items/01FZVVFE77EEYA2UNKMVD3HP2C3X4P2EBD/workbook/worksheets('2月予定表')/range(address='$F$2:$CE$31')`
+        // graphMeEndpoint: "https://graph.microsoft.com/v1.0/me"
     }    
 }
