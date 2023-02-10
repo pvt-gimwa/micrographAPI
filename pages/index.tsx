@@ -3,33 +3,17 @@ import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
 import Schedule from '@/components/schedule'
-import type { NextApiRequest, NextApiResponse, NextPage } from "next"
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "./api/auth/[...nextauth]"
-import { useSession } from "next-auth/react"
-import { useRouter } from 'next/router'
-import Router, { NextRouter } from 'next/router'
-import JWT from 'next-auth/jwt'
+import { PublicClientApplication } from "@azure/msal-browser";
+import { msalConfig } from "authConfig";
+import ReactDOM from 'react-dom'
+import React from 'react'
+import { MsalProvider } from "@azure/msal-react";
+
 
 const inter = Inter({ subsets: ['latin'] })
 
-export async function getServerSideProps(context:any) {
-  return {
-    props: {
-      session: await getServerSession(
-        context.req,
-        context.res,
-        authOptions
-      ),
-    },
-  }
-}
 
-interface Props {
-  req: NextRouter
-}
-
-const Home: NextPage<Props> = ({ req }) => {
+const Home = () => {
 
   return (
     <>
@@ -44,7 +28,7 @@ const Home: NextPage<Props> = ({ req }) => {
           <p>
             Testing MicrographAPI&nbsp;
             <code className={styles.code}></code>
-            <Schedule req={req}/>
+            <Schedule />
           </p>
           <div>
             <a

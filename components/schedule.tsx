@@ -1,42 +1,13 @@
-import { useEffect, useState } from 'react'
-import { signIn, signOut, useSession } from 'next-auth/react';
 import styles from '@/styles/Schedule.module.css'
-import { JWT } from "next-auth/jwt"
-import { getMSgraphApi } from '@/lib/getSchedule';
 
-interface Props {
-    req: any;
-}
-const secret = process.env.NEXTAUTH_SECRET
+const Schedule = () => {
 
-const Schedule:React.FC<Props> = ({ req }) => {
-
-    const { data: session, status } = useSession();
-    const isLoading = status === 'loading';
-    const [data, setData] = useState(null);
-    const accessToken = session?.token.accessToken
-    
-    useEffect(() => {        
-        if (accessToken) {
-            const fetchData = async () =>{
-                try{
-                    const api_data = await getMSgraphApi(accessToken)
-                    setData(api_data.text)
-                }catch(err){
-                    console.log(err)
-                }
-            } 
-            fetchData()
-        } else {
-            console.log("no accessToken")
-        }
-    
-    }, []);
-
-    // console.log(data)
-
-    if (isLoading) {
-        return <span>Loading...</span>
+    const session = {
+        user:{
+            email: null,
+            name: null,
+        },
+        data:null
     }
     
     return(
@@ -47,10 +18,9 @@ const Schedule:React.FC<Props> = ({ req }) => {
                 {!session && (
                     <>
                         <a
-                            href={`/api/auth/signin`}
+                            href=""
                             onClick={(e) => {
                             e.preventDefault();
-                            signIn();
                             }}
                         >
                             {' | '}Sign in
@@ -62,11 +32,10 @@ const Schedule:React.FC<Props> = ({ req }) => {
                         <small>| Signed in as </small>
                         <strong>{session.user.email ?? session.user.name}</strong>
                         <a
-                            href={`/api/auth/signout`}
+                            href=""
                             className={styles.userSpan}
                             onClick={(e) => {
                             e.preventDefault();
-                            signOut();
                             }}
                         >
                             {' | '}<small>Sign Out</small>
@@ -80,10 +49,10 @@ const Schedule:React.FC<Props> = ({ req }) => {
                     <code className={styles.codeBox}>{JSON.stringify(session, null, 2)}</code>
                 </span>
             )}
-            {data && (
+            {session?.data && (
                 <span className={styles.dataSpan}>
                     <span><b>- 取得したData -</b></span><br /><br />
-                    <code className={styles.codeBox}>{JSON.stringify(data, null, 2)}</code>
+                    <code className={styles.codeBox}>{JSON.stringify(session?.data, null, 2)}</code>
                 </span> 
             )}
         </span>
