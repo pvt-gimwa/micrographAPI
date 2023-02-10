@@ -1,42 +1,49 @@
-import { useEffect, useState } from 'react'
-import { signIn, signOut, useSession } from 'next-auth/react';
 import styles from '@/styles/Schedule.module.css'
-import { JWT } from "next-auth/jwt"
-import { getMSgraphApi } from '@/lib/getSchedule';
+import { AuthenticatedTemplate, UnauthenticatedTemplate, useIsAuthenticated, useMsal } from '@azure/msal-react';
+import { SignInButton } from './SignInButton';
+import { SignOutButton } from './SignOutButton';
+import { ProfileData } from '@/components/ProfileData';
+import { useState } from 'react';
+import { loginRequest } from '@/lib/authConfig';
+import { callMsGraph } from '@/lib/graph';
 
-interface Props {
-    req: any;
-}
-const secret = process.env.NEXTAUTH_SECRET
-
-const Schedule:React.FC<Props> = ({ req }) => {
-
-    const { data: session, status } = useSession();
-    const isLoading = status === 'loading';
-    const [data, setData] = useState(null);
-    const accessToken = session?.token.accessToken
-    
-    useEffect(() => {        
-        if (accessToken) {
-            const fetchData = async () =>{
-                try{
-                    const api_data = await getMSgraphApi(accessToken)
-                    setData(api_data.text)
-                }catch(err){
-                    console.log(err)
-                }
-            } 
-            fetchData()
-        } else {
-            console.log("no accessToken")
-        }
-    
-    }, []);
-
-    // console.log(data)
-
-    if (isLoading) {
-        return <span>Loading...</span>
+/**
+ * Renders information about the signed-in user or a button to retrieve data about the user
+ */
+const ProfileContent = () => {
+    const { instance, accounts } = useMsal();
+    const [graphData, setGraphData] = useState(null);
+  
+    function RequestProfileData() {
+        // Silently acquires an access token which is then attached to a request for MS Graph data
+        instance.acquireTokenSilent({
+            ...loginRequest,
+            account: accounts[0]
+        }).then((response) => {
+            callMsGraph(response.accessToken).then(response => setGraphData(response));
+        });
+    }
+  
+    return (
+        <>
+            <p className="card-title">Welcome {accounts[0].name ? accounts[0].name : null}</p>
+            {graphData ? 
+                <ProfileData graphData={graphData} />
+                :
+                <button onClick={RequestProfileData}>Request Profile Information</button>
+            }
+        </>
+    );
+  };
+  
+const Schedule = () => {
+    const isAuthenticated = useIsAuthenticated();
+    const session = {
+        user:{
+            email: null,
+            name: null,
+        },
+        data:null
     }
     
     return(
@@ -44,48 +51,43 @@ const Schedule:React.FC<Props> = ({ req }) => {
             <span
                 className={styles.userSpan}
             >
-                {!session && (
-                    <>
-                        <a
-                            href={`/api/auth/signin`}
-                            onClick={(e) => {
-                            e.preventDefault();
-                            signIn();
-                            }}
-                        >
-                            {' | '}Sign in
-                        </a>
-                    </>
-                )}  
-                {session?.user && (
-                    <>
-                        <small>| Signed in as </small>
-                        <strong>{session.user.email ?? session.user.name}</strong>
-                        <a
-                            href={`/api/auth/signout`}
-                            className={styles.userSpan}
-                            onClick={(e) => {
-                            e.preventDefault();
-                            signOut();
-                            }}
-                        >
-                            {' | '}<small>Sign Out</small>
-                        </a>
-                    </>
-                )}
+                
+                { isAuthenticated ? 
+                <>
+                    {/* <strong>{session.user.email ?? session.user.name}</strong> */}
+                    {' | '}
+                    <SignOutButton />
+                </>
+                :
+                <>
+                    {' | '}
+                    <SignInButton />
+                </>
+                }
             </span>
-            {session?.user && (
+            <div className={styles.dataSpan}>
+                <span><b>- Session情報 -</b></span><br /><br />
+                <AuthenticatedTemplate>
+                    <ProfileContent />
+                </AuthenticatedTemplate>
+
+                <UnauthenticatedTemplate>
+                    <h5 className="card-title">Please sign-in to see your profile information.</h5>
+                </UnauthenticatedTemplate>
+            </div>
+
+            {/* {session?.user && (
                 <span className={styles.dataSpan}>
                     <span><b>- Session情報 -</b></span><br /><br />
                     <code className={styles.codeBox}>{JSON.stringify(session, null, 2)}</code>
                 </span>
             )}
-            {data && (
+            {session?.data && (
                 <span className={styles.dataSpan}>
                     <span><b>- 取得したData -</b></span><br /><br />
-                    <code className={styles.codeBox}>{JSON.stringify(data, null, 2)}</code>
+                    <code className={styles.codeBox}>{JSON.stringify(session?.data, null, 2)}</code>
                 </span> 
-            )}
+            )} */}
         </span>
     )
 }
