@@ -22,9 +22,9 @@ export const SignOutButton = () => {
         }
     }
     return (
-        <div>
-            <div onClick={() => handleLogout("popup")}>Sign out using Popup</div>
-            <div onClick={() => handleLogout("redirect")}>Sign out using Redirect</div>
-        </div>
+        <span>
+            {/* <div onClick={() => handleLogout("popup")}>Sign out using Popup</div> */}
+            <button onClick={() => handleLogout("redirect")}>Sign out using Redirect</button>
+        </span>
     )
 }

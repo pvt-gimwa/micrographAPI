@@ -21,12 +21,12 @@ export const PageLayout = (props:any) => {
         <>
             <div>
                 <a className="navbar-brand" href="/">Microsoft Identity Platform</a>
-                {/* { isAuthenticated ? <SignOutButton /> : <SignInButton /> } */}
-                <div>
+                { isAuthenticated ? <SignOutButton /> : <SignInButton /> }
+                {/* <div>
                 SignInButton:<br /><SignInButton />
                 <br />
                 SignOutButton:<br /><SignOutButton />
-                </div>
+                </div> */}
             </div>
             <h5><center>Welcome to the Microsoft Authentication Library For Javascript - React Quickstart</center></h5>
             <br />

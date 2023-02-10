@@ -1,6 +1,6 @@
 import React from "react";
 import { useMsal } from "@azure/msal-react";
-import { loginRequest } from "../authConfig";
+import { loginRequest } from "@/lib/authConfig";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Dropdown from "react-bootstrap/esm/Dropdown";
 
@@ -22,9 +22,9 @@ export const SignInButton = () => {
         }
     }
     return (
-        <div >
-            <div onClick={() => handleLogin("popup")}>Sign in using Popup</div>
-            <div onClick={() => handleLogin("redirect")}>Sign in using Redirect</div>
-        </div>
+        <span >
+            {/* <div onClick={() => handleLogin("popup")}>Sign in using Popup</div> */}
+            <button onClick={() => handleLogin("redirect")}>Sign in using Redirect</button>
+        </span>
     )
 }

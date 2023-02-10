@@ -4,7 +4,7 @@ import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
 import Schedule from '@/components/schedule'
 import { PublicClientApplication } from "@azure/msal-browser";
-import { msalConfig } from "authConfig";
+import { msalConfig } from "@/lib/authConfig";
 import ReactDOM from 'react-dom'
 import React from 'react'
 import { MsalProvider } from "@azure/msal-react";
@@ -25,11 +25,11 @@ const Home = () => {
       </Head>
       <main className={styles.main}>
         <div className={styles.description}>
-          <p>
+          <div className={styles.shcedule}>
             Testing MicrographAPI&nbsp;
             <code className={styles.code}></code>
             <Schedule />
-          </p>
+          </div>
           <div>
             <a
               href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"

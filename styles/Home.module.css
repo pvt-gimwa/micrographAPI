@@ -27,6 +27,16 @@
 
 .description p {
   position: relative;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  background-color: rgba(var(--callout-rgb), 0.3);
+  border: 1px solid rgba(var(--callout-border-rgb), 0.15);
+  border-radius: var(--border-radius);
+  width: 100%;
+  max-width: 800px;
+}
+.shcedule{
+  position: relative;
   margin: 0;
   padding: 1rem;
   background-color: rgba(var(--callout-rgb), 0.5);
@@ -215,6 +225,12 @@
 
   .description p,
   .description div {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    width: 100%;
+  }
+  .shcedule {
     display: flex;
     justify-content: center;
     position: fixed;
